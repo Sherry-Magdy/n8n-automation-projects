@@ -2,7 +2,7 @@
 
 Portfolio site for my n8n projects. The first project is an **AI Recruitment Screening System**: an application form saves CVs to Google Drive, Gemini scores each CV against the job every hour, candidates get the right email, and an error workflow reports failures.
 
-Live site: https://YOUR-USERNAME.github.io/YOUR-REPO/
+Live site: https://sherry-magdy.github.io/n8n-automation-projects/
 
 ## Workflows
 
