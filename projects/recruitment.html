@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Recruitment Screening · Sherry Magdy</title>
+<meta name="description" content="An n8n recruitment system: application form, hourly AI screening with Gemini, and error monitoring. Try it in demo mode.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+
+<link rel="icon" type="image/jpeg" href="../imgs/icon.jpg">
+</head>
+
+<body>
+<nav class="navbar"><div class="nav-links">
+  <a class="nav-link" href="../index.html">← Projects</a>
+  <a class="nav-link" href="#home">Home</a>
+  <a class="nav-link" href="#apply">Apply</a>
+  <a class="nav-link" href="#screening">Screening</a>
+  <a class="nav-link" href="#health">Health</a>
+  <a class="nav-link" href="#workflows">Workflows</a>
+</div></nav>
+<main>
+
+<section id="home" style="padding-top:130px">
+  <div class="eyebrow">SHERRY · AI RECRUITMENT SYSTEM</div>
+  <h1 class="hero-name" style="font-size:clamp(34px,6vw,56px)">Hello! What would you like to do today?</h1>
+  <span class="badge" id="mode">Demo mode</span>
+  <p class="hero-desc">Three n8n workflows that take an application from form to decision. Pick a stage and try it. Demo mode runs in your browser with fictional data.</p>
+  <div class="choices">
+    <a class="choice" href="#apply"><div class="num">1</div><h3>Apply for a role</h3><p>Upload a PDF CV. It is checked on arrival, saved to Drive and logged in a sheet.</p><span class="go">Recruitment 1 · Intake →</span></a>
+    <a class="choice" href="#screening"><div class="num">2</div><h3>Watch the screening</h3><p>Every hour Gemini scores new CVs. Good ones get invited, doubtful ones go to HR.</p><span class="go">Recruitment 2 · AI screening →</span></a>
+    <a class="choice" href="#health"><div class="num">3</div><h3>Break something</h3><p>See how errors are classified, throttled and reported, and how a stuck queue is caught.</p><span class="go">Recruitment 3 · Error handler →</span></a>
+  </div>
+  <div class="tags" style="margin-top:26px"><span class="tag">n8n</span> <span class="tag">Gemini</span> <span class="tag">Google Sheets</span> <span class="tag">Google Drive</span> <span class="tag">Gmail</span></div>
+</section>
+
+<section id="apply">
+  <div class="eyebrow">STEP 1 · APPLY</div>
+  <h2>Join the team</h2>
+  <p>Recruitment 1 checks the name, email, position and that the file is a real PDF between 500 bytes and 5 MB. Duplicates for the same role are caught. Then the CV is saved to Drive and a row is added with Status <b>new</b>.</p>
+  <div class="panel">
+    <div id="liveBox" hidden><p>Live mode is on. Open the real application form:</p><a class="btn btn-solid" id="applyLink" target="_blank" rel="noopener">Open the application form ↗</a></div>
+    <form id="applyForm" novalidate>
+      <div class="row2"><div><label for="fn">Full name</label><input id="fn"></div><div><label for="fe">Email</label><input id="fe" type="email"></div></div>
+      <label for="fp">Position</label>
+      <select id="fp"><option>AI Automation Engineer (Junior)</option><option>Data Analyst</option><option>Customer Support Specialist</option></select>
+      <label for="ff">CV (PDF, under 5 MB)</label><input id="ff" type="file" accept="application/pdf">
+      <p style="font-size:12px;margin:6px 0 0">Demo only: the file is checked in your browser and never uploaded.</p>
+      <div class="hero-actions"><button class="btn btn-solid" type="submit">Submit application</button><button class="btn btn-outline" type="button" id="fill">Fill with a sample</button></div>
+      <div id="applyMsg"></div>
+    </form>
+  </div>
+</section>
+
+<section id="screening">
+  <div class="eyebrow">STEP 2 · SCREENING</div>
+  <h2>Screening, step by step</h2>
+  <p>The sheet holds fictional candidates plus anyone who applied above. Press the button to process every row with Status <b>new</b>, like the hourly workflow does.</p>
+  <table class="rules" style="margin-bottom:18px"><tr><th>Score</th><th>Outcome</th></tr>
+    <tr><td>70 or more</td><td>Invitation to the candidate and an interview brief for HR</td></tr>
+    <tr><td>40 to 69</td><td>Flagged for HR to decide</td></tr>
+    <tr><td>Below 40</td><td>Polite decline. No score or reasons are shared</td></tr>
+    <tr><td>File or AI failure</td><td>Marked Manual Review and HR is notified. The batch keeps going</td></tr></table>
+  <div class="hero-actions"><button class="btn btn-solid" id="runBatch" type="button">▶ Run Batch Now</button><button class="btn btn-outline" id="resetData" type="button">Reset sample data</button></div>
+  <div class="panel scroll"><table class="rules" id="apps"></table></div>
+  <div class="log" id="batchLog">Press “Run Batch Now” to start.</div>
+</section>
+
+<section id="health">
+  <div class="eyebrow">STEP 3 · SYSTEM HEALTH</div>
+  <h2>When something breaks</h2>
+  <p>Recruitment 3 classifies each error, logs it, and emails HR once per problem per hour. A heartbeat also catches the failure no error can report: a queue that silently stopped moving. Demo clock: <b id="clock">09:00</b> <button class="btn btn-outline" id="adv" type="button" style="padding:6px 12px">Advance 1 hour</button></p>
+  <div class="panel">
+    <div class="row2"><div><label for="em">Error message</label>
+      <select id="em"><option>401 Unauthorized: credential expired</option><option>429 Too many requests</option><option>ETIMEDOUT: request timed out</option><option>Could not parse output: unexpected token</option><option>Cannot read properties of undefined</option></select></div>
+      <div><label for="ew">Failed workflow</label><select id="ew"><option>Recruitment 2 - Batch Evaluation (AI Screening)</option><option>Recruitment 1 - Intake (Form to Drive)</option></select></div></div>
+    <div class="hero-actions"><button class="btn btn-solid" id="trig" type="button">Trigger error</button><button class="btn btn-outline" id="beat" type="button">Run heartbeat check</button><button class="btn btn-outline" id="digest" type="button">Build today’s digest</button></div>
+    <div id="healthMsg" class="msg-ok"></div>
+  </div>
+  <div class="panel scroll"><table class="rules" id="errs"><tr><th>Time</th><th>Workflow</th><th>Type</th><th>Severity</th><th>Alerted</th></tr></table></div>
+</section>
+
+<section id="workflows">
+  <div class="eyebrow">UNDER THE HOOD</div>
+  <h2>The three workflows</h2>
+  <figure class="media"><img src="../assets/workflow-2.png" alt="n8n canvas of the batch evaluation workflow" onerror="this.parentNode.style.display='none'"><figcaption>Recruitment 2 canvas</figcaption></figure>
+  <ul class="list">
+    <li><a href="../workflows/recruitment-1-intake.json" download>recruitment-1-intake.json</a> · form, validation, Drive, sheet</li>
+    <li><a href="../workflows/recruitment-2-ai-screening.json" download>recruitment-2-ai-screening.json</a> · hourly read, score, validate, email</li>
+    <li><a href="../workflows/recruitment-3-error-handler.json" download>recruitment-3-error-handler.json</a> · alerts, digest, heartbeat</li>
+  </ul>
+  <h3 class="sub">Design choices</h3>
+  <ul class="list">
+    <li><b>The AI never grades itself.</b> A code step re-checks the score range, the label and that extracted skills appear in the CV.</li>
+    <li><b>Failures never stop the batch.</b> A bad file sets Manual Review and the loop moves on.</li>
+    <li><b>Rows are matched by CV file ID,</b> so two applicants with the same name cannot overwrite each other.</li>
+    <li><b>Humans decide borderline cases.</b> Only clear scores trigger emails to candidates.</li>
+  </ul>
+  <p style="font-size:13px">Downloads have credentials, sheet IDs and email addresses removed. Sample candidates are fictional.</p>
+</section>
+</main>
+<footer>Built by Sherry Magdy · Cairo, Egypt</footer>
+
+<script>
+const CONFIG = { n8nBase: "", applyForm: "/form/YOUR-APPLY-FORM-ID" }; // live: "https://YOUR-DOMAIN.ngrok-free.app"
+const $ = s => document.querySelector(s);
+function el(t, txt, cls) { const e = document.createElement(t); if (txt != null) e.textContent = txt; if (cls) e.className = cls; return e; }
+if (CONFIG.n8nBase) {
+  $("#mode").textContent = "Live · n8n"; $("#mode").classList.add("live");
+  $("#applyLink").href = CONFIG.n8nBase + CONFIG.applyForm; $("#liveBox").hidden = false;
+}
+let clock = 540;
+const fmt = m => String(Math.floor(m / 60) % 24).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+const seed = () => [
+  { at: 510, name: "Mona Adel", pos: "AI Automation Engineer (Junior)", status: "new", score: null, plan: 86 },
+  { at: 515, name: "Omar Khaled", pos: "Data Analyst", status: "new", score: null, plan: 58 },
+  { at: 520, name: "Laila Nabil", pos: "Customer Support Specialist", status: "new", score: null, plan: 32 },
+  { at: 525, name: "Karim Sami", pos: "Data Analyst", status: "new", score: null, plan: null }
+];
+let rows = seed(), errs = [];
+function pill(s) { const c = { invited: "good", "awaiting HR": "warn", declined: "bad", "manual review": "bad" }[s] || ""; return el("span", s, "pill " + c); }
+function renderApps() {
+  const t = $("#apps"); t.replaceChildren();
+  const h = el("tr"); ["Applied", "Name", "Position", "Status", "Score"].forEach(x => h.append(el("th", x))); t.append(h);
+  rows.forEach(r => { const tr = el("tr"); tr.append(el("td", fmt(r.at)), el("td", r.name), el("td", r.pos)); const td = el("td"); td.append(pill(r.status)); tr.append(td, el("td", r.score ?? "–")); t.append(tr); });
+}
+const log = (m) => { const b = $("#batchLog"); b.textContent += "\n" + m; b.scrollTop = b.scrollHeight; };
+$("#fill").onclick = () => { $("#fn").value = "Sample Candidate"; $("#fe").value = "sample@example.com"; };
+$("#applyForm").onsubmit = e => {
+  e.preventDefault(); const m = $("#applyMsg"); const errors = [];
+  const name = $("#fn").value.trim(), email = $("#fe").value.trim(), f = $("#ff").files[0];
+  if (name.length < 2) errors.push("Enter your full name.");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) errors.push("Enter a valid email.");
+  if (!f) errors.push("Choose a CV file."); else if (f.type !== "application/pdf") errors.push("The CV must be a PDF.");
+  else if (f.size < 500 || f.size > 5 * 1024 * 1024) errors.push("The PDF must be between 500 bytes and 5 MB.");
+  if (rows.some(r => r.name.toLowerCase() === name.toLowerCase() && r.pos === $("#fp").value)) errors.push("You already applied for this role.");
+  if (errors.length) { m.className = "msg-err"; m.textContent = errors.join(" "); return; }
+  rows.push({ at: clock, name, pos: $("#fp").value, status: "new", score: null, plan: 30 + Math.floor(Math.random() * 66) });
+  renderApps(); m.className = "msg-ok"; m.textContent = "Application received. Your row has Status “new”. Now run the batch in Step 2.";
+};
+$("#runBatch").onclick = () => {
+  const todo = rows.filter(r => r.status === "new"); $("#batchLog").textContent = "Batch started. " + todo.length + " new application(s).";
+  if (!todo.length) { log("Nothing to process."); return; }
+  todo.forEach(r => {
+    log("\n→ " + r.name + " (" + r.pos + ")");
+    if (r.plan === null) { log("  Download CV failed → Describe failure → Manual Review. HR notified."); r.status = "manual review"; return; }
+    log("  CV text read, profile extracted, Gemini score: " + r.plan);
+    log("  Validation passed (score range, label, skills found in CV).");
+    r.score = r.plan;
+    if (r.plan >= 70) { r.status = "invited"; log("  Decision: interview → invitation sent, HR brief sent."); }
+    else if (r.plan >= 40) { r.status = "awaiting HR"; log("  Decision: maybe → flagged for HR."); }
+    else { r.status = "declined"; log("  Decision: reject → polite decline sent."); }
+    log("  Sheet updated, next candidate.");
+  });
+  renderApps();
+};
+$("#resetData").onclick = () => { rows = seed(); renderApps(); $("#batchLog").textContent = "Press “Run Batch Now” to start."; };
+const RULES = [
+  ["auth", "critical", /401|403|unauthori|forbidden|invalid_grant|expired|access denied/],
+  ["rate_limit", "warning", /429|rate limit|too many requests|quota/],
+  ["network", "warning", /timeout|timed out|etimedout|econnreset|50[234]/],
+  ["ai_output", "warning", /output parser|could not parse|parseable|unexpected token|json|schema/],
+  ["data", "warning", /undefined|not defined|not found|missing|expression/]
+];
+function say(t, bad) { const m = $("#healthMsg"); m.className = bad ? "msg-err" : "msg-ok"; m.textContent = t; }
+function renderErrs() {
+  const t = $("#errs"); t.replaceChildren(); const h = el("tr"); ["Time", "Workflow", "Type", "Severity", "Alerted"].forEach(x => h.append(el("th", x))); t.append(h);
+  errs.forEach(r => { const tr = el("tr"); [fmt(r.time), r.wf.split(" - ")[0], r.type, r.sev, r.alerted].forEach(x => tr.append(el("td", x))); t.append(tr); });
+}
+$("#trig").onclick = () => {
+  const msg = $("#em").value.toLowerCase(), wf = $("#ew").value;
+  const rule = RULES.find(r => r[2].test(msg)) || ["unknown", "critical"];
+  const sev = /intake/i.test(wf) ? "critical" : rule[1], fp = wf + "|" + rule[0];
+  let alerted = "digest only";
+  if (sev === "critical") alerted = errs.some(e => e.fp === fp && e.alerted === "yes" && clock - e.time < 60) ? "throttled" : "yes";
+  errs.unshift({ time: clock, wf, type: rule[0], sev, alerted, fp }); renderErrs();
+  say(alerted === "yes" ? "Critical error: HR emailed now." : alerted === "throttled" ? "Same problem within the last hour: logged, not emailed again." : "Warning: logged and added to the 8 AM digest.", alerted === "yes");
+};
+$("#adv").onclick = () => { clock += 60; $("#clock").textContent = fmt(clock); };
+$("#beat").onclick = () => {
+  const stuck = rows.filter(r => r.status === "new" && clock - r.at > 180);
+  stuck.length ? say(stuck.length + " application(s) waiting more than 3 hours. Heartbeat alert sent: is Workflow 2 running?", true) : say("Queue is moving. Nothing waiting more than 3 hours.");
+};
+$("#digest").onclick = () => say("Last 24 hours: " + errs.length + " error(s), " + errs.filter(e => e.sev === "critical").length + " critical. Still open: " + errs.length + ".");
+renderApps();
+const links = document.querySelectorAll('.nav-link[href^="#"]'), secs = [...links].map(l => document.querySelector(l.getAttribute("href")));
+function spy() {
+  const y = scrollY + innerHeight * 0.35; let cur = secs[0];
+  secs.forEach(s => { if (s && s.offsetTop <= y) cur = s; });
+  if (innerHeight + scrollY >= document.body.scrollHeight - 2) cur = secs[secs.length - 1];
+  links.forEach(l => l.classList.toggle("active", l.getAttribute("href") === "#" + cur.id));
+}
+addEventListener("scroll", spy, { passive: true }); spy();
+</script>
+</body>
+</html>

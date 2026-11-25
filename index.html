@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sherry Magdy — n8n Automation Projects</title>
+  <meta name="description"
+    content="n8n automation projects by Sherry Magdy: AI recruitment screening, error monitoring and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet">
+    
+<link rel="icon" type="image/jpeg" href="imgs/icon.jpg">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="nav-links">
+      <a class="nav-link active" href="#hero">Home</a>
+      <a class="nav-link" href="#projects">Projects</a>
+      <a class="nav-link" href="#contact">Contact</a>
+      <a class="nav-link" href="https://sherry-portfolio-eight.vercel.app/">Portfolio ↗</a>
+    </div>
+  </nav>
+  <main>
+    <section id="hero">
+      <div class="terminal">&gt; automating_the_boring_parts<span class="cursor"></span></div>
+      <h1 class="hero-name">n8n Automation<br>Projects</h1>
+      <div class="hero-role">BUILT BY SHERRY MAGDY · AI AUTOMATION ENGINEER</div>
+      <p class="hero-desc">End-to-end workflows that connect forms, AI models, Google Workspace and email, so repetitive
+        work runs on its own and people only make the final call.</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="#projects">View Projects</a>
+        <a class="btn btn-outline" href="#contact">Get in Touch</a>
+      </div>
+      <div class="hero-meta">
+        <div>stack: <span>n8n · Gemini · Google Sheets · Drive · Gmail</span></div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="eyebrow">01 — PROJECTS</div>
+      <h2>Things I've Automated</h2>
+      <div class="project-grid">
+        <a class="project-card" href="projects/recruitment.html">
+          <div class="slot-tag">Featured · 3 workflows</div>
+          <h3>AI Recruitment Screening System</h3>
+          <p>Applications come in through a form, Gemini reads each CV, scores it against the job, and the right email
+            goes out. Borderline cases go to HR, and failures are caught and reported.</p>
+          <div class="tags"><span class="tag">n8n</span> <span class="tag">Gemini</span> <span class="tag">Google
+              Sheets</span> <span class="tag">Gmail</span></div>
+        </a>
+        <div class="project-card slot">
+          <div class="slot-tag">Coming soon</div>
+          <h3>Next project</h3>
+          <p>Your next n8n project goes here. Copy the card above and change the link and text.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="eyebrow">02 — GET IN TOUCH</div>
+      <h2>Let's Connect</h2>
+      <p>Open to internships, freelance projects, and junior roles in AI Automation & Web
+        Development. Reach out anytime!</p>
+      <div class="contact-links">
+        <a class="contact-link" href="mailto:sherrymagdy066@gmail.com"><span class="k">Email</span><span
+            class="v">sherrymagdy066@gmail.com</span></a>
+        <a class="contact-link" href="tel:+201080175308"><span class="k">Phone</span><span class="v">+20 108 017
+            5308</span></a>
+        <a class="contact-link" href="https://linkedin.com/in/sherry-magdy-3b7b44325"><span
+            class="k">LinkedIn</span><span class="v">sherry-magdy</span></a>
+        <a class="contact-link" href="https://github.com/Sherry-Magdy"><span class="k">GitHub</span><span
+            class="v">Sherry-Magdy</span></a>
+        <a class="contact-link" href="https://codeforces.com/profile/Sherry66" target="_blank" rel="noopener"><span
+            class="k">Codeforces</span><span class="v">Sherry66</span></a>
+      </div>
+    </section>
+  </main>
+  <footer>Built by Sherry Magdy · Cairo, Egypt</footer>
+
+  <script>
+    const links = document.querySelectorAll('.nav-link[href^="#"]');
+    const sections = [...links].map(l => document.querySelector(l.getAttribute('href')));
+
+    function setActive() {
+      const y = window.scrollY + window.innerHeight * 0.35;
+      let current = sections[0];
+      sections.forEach(s => { if (s && s.offsetTop <= y) current = s; });
+      if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 2) {
+        current = sections[sections.length - 1];
+      }
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current.id));
+    }
+
+    window.addEventListener('scroll', setActive, { passive: true });
+    setActive();
+  </script>
+</body>
+
+</html>
