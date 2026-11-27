@@ -109,8 +109,7 @@ const $ = s => document.querySelector(s);
 function el(t, txt, cls) { const e = document.createElement(t); if (txt != null) e.textContent = txt; if (cls) e.className = cls; return e; }
 if (CONFIG.n8nBase) {
   $("#mode").textContent = "Live · n8n"; $("#mode").classList.add("live");
-  $("#applyLink").href = CONFIG.n8nBase + CONFIG.applyForm; $("#liveBox").hidden = false;
-}
+$("#applyLink").href = CONFIG.n8nBase + CONFIG.applyForm; $("#liveBox").hidden = false; $("#applyForm").hidden = true;}
 let clock = 540;
 const fmt = m => String(Math.floor(m / 60) % 24).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
 const seed = () => [
